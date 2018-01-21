@@ -20,13 +20,13 @@ const User = mongoose.model('user', new mongoose.Schema({
   }
 }))
 
-// User.create({
-//   user: 'xiaohua',
-//   age: 10
-// }, (err, doc) => {
-//   if (!err) console.log(doc)
-//   else console.log(err)
-// })
+User.create({
+  user: 'xiaohua',
+  age: 10
+}, (err, doc) => {
+  if (!err) console.log(doc)
+  else console.log(err)
+})
 
 // User.remove({ age: 18 }, (err, doc) => {
 //   console.log(doc)

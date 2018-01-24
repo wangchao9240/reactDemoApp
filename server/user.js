@@ -4,7 +4,7 @@ const Router =  express.Router()
 Router.get('/info', (req, res) => {
   // 用户有没有cookie
   return res.json({
-    code: 1
+    code: 0
   })
 })
 

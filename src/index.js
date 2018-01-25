@@ -11,6 +11,7 @@ import AuthRoute from './components/authRoute/authRoute'
 
 import reducers from './reducer'
 import './config'
+import './index.css'
 
 const store = createStore(reducers, compose(
   applyMiddleware(thunk),

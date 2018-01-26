@@ -2,6 +2,7 @@ const express = require('express')
 const Router =  express.Router()
 const model = require('./model')
 const User = model.getModel('user')
+const utils = require('utility')
 
 Router.get('/list', async (req, res) => {
   try {
@@ -17,7 +18,7 @@ Router.post('/register', async (req, res) => {
   try {
     const user = await User.findOne({ user: data.user }).exec()
     if (user) return res.json({ code: 1, msg: '用户名重复' })
-    const newUser = await User.create({ ...data })
+    const newUser = await User.create(Object.assign(data, { pwd: md5Pwd(data.pwd) }))
     return res.json({ code: 0 })
   } catch (err) {
     return res.json({ code: 1, msg: `后端出错了， 错误信息${err}` })
@@ -30,5 +31,10 @@ Router.get('/info', (req, res) => {
     code: 0
   })
 })
+
+const md5Pwd = (pwd) => {
+  const salt = 'missu'
+  return utils.md5(utils.md5(pwd + salt))
+}
 
 module.exports = Router

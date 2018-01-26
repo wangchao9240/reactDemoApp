@@ -48,7 +48,7 @@ export const register = ({ user, pwd, repeatpwd, type }) => {
   return async (dispatch) => {
     try {
       const { data } = await axios.post('/user/register', { user, pwd, type })
-      if (data.code === 0) dispatch(registerSuccess(data))
+      if (data.code === 0) dispatch(registerSuccess({ user, pwd, type }))
       else dispatch(errorMsg(data.msg))
     } catch (err) {
       dispatch(errorMsg(`连接异常-->${err}`))
@@ -61,7 +61,7 @@ export const login = ({ user, pwd }) => {
   return async (dispatch) => {
     try {
       const { data } = await axios.post('/user/login', { user, pwd })
-      if (data.code === 0) dispatch(loginSuccess({ user, pwd }))
+      if (data.code === 0) dispatch(loginSuccess(data.data))
       else dispatch(errorMsg(data.msg))
     } catch (err) {
       return dispatch(errorMsg(`连接异常-->${err}`))

@@ -13,6 +13,17 @@ Router.get('/list', async (req, res) => {
   }
 })
 
+Router.post('/login', async (req, res) => {
+  const { user, pwd } = req.body
+  try {
+    const findUser = await User.findOne({ user: user, pwd: md5Pwd(pwd) }).exec()
+    if (!findUser) return res.json({ code: 1, msg: '用户名或密码错误' })
+    else return res.json({ code: 0, data: findUser })
+  } catch (err) {
+    return res.json({ code: 1, msg: `后端出错了， 错误信息${err}` })
+  }
+})
+
 Router.post('/register', async (req, res) => {
   const data = req.body
   try {

@@ -1,15 +1,13 @@
 import axios from 'axios'
 import { getRedirectPath } from '../util'
 
-const REGISTER_SUCCESS = 'REGISTER_SUCCESS'
 const ERROR_MSG = 'ERROR_MSG'
-const LOGIN_SUCCESS = 'LOGIN_SUCCESS'
+const AUTH_SUCCESS = 'ANTH_SUCCESS'
 const LOAD_DATA = 'LOAD_DATA'
 
 const initState = {
   redirectTo: '',
   msg: '',
-  isAuth: false,
   user: '',
   pwd: '',
   type: ''
@@ -18,10 +16,8 @@ const initState = {
 // reducer
 export const user = (state=initState, action) => {
   switch (action.type) {
-    case REGISTER_SUCCESS:
-      return { ...state, isAuth: true, msg: '', redirectTo: getRedirectPath(action.payload), ...action.payload }
-    case LOGIN_SUCCESS:
-      return { ...state, isAuth: true, msg: '', redirectTo: getRedirectPath(action.payload), ...action.payload }
+    case AUTH_SUCCESS:
+      return { ...state, msg: '', redirectTo: getRedirectPath(action.payload), ...action.payload }
     case LOAD_DATA:
       return { ...state, ...action.payload }
     case ERROR_MSG:
@@ -36,12 +32,8 @@ const errorMsg = (msg) => {
   return { type: ERROR_MSG, msg }
 }
 
-const registerSuccess = (data) => {
-  return { type: REGISTER_SUCCESS, payload: data }
-}
-
-const loginSuccess = (data) => {
-  return { type: LOGIN_SUCCESS, payload: data }
+const authSuccess = (data) => {
+  return { type: AUTH_SUCCESS, payload: data }
 }
 
 const loaddata = (userinfo) => {
@@ -55,7 +47,7 @@ export const register = ({ user, pwd, repeatpwd, type }) => {
   return async (dispatch) => {
     try {
       const { data } = await axios.post('/user/register', { user, pwd, type })
-      if (data.code === 0) dispatch(registerSuccess({ user, pwd, type }))
+      if (data.code === 0) dispatch(authSuccess({ user, pwd, type }))
       else dispatch(errorMsg(data.msg))
     } catch (err) {
       dispatch(errorMsg(`连接异常-->${err}`))
@@ -68,7 +60,7 @@ export const login = ({ user, pwd }) => {
   return async (dispatch) => {
     try {
       const { data } = await axios.post('/user/login', { user, pwd })
-      if (data.code === 0) dispatch(loginSuccess(data.data))
+      if (data.code === 0) dispatch(authSuccess(data.data))
       else dispatch(errorMsg(data.msg))
     } catch (err) {
       return dispatch(errorMsg(`连接异常-->${err}`))
@@ -78,4 +70,15 @@ export const login = ({ user, pwd }) => {
 
 export const loadData = (userinfo) => {
   return loaddata(userinfo)
+}
+
+export const update = (dataInfo) => {
+  return async (dispatch) => {
+    try {
+      const { data } = await axios.post('/user/update', dataInfo)
+      if (data.code === 0) return dispatch(authSuccess(data.data))
+    } catch (err) {
+      return dispatch(errorMsg(`连接异常-->${err}`))
+    }
+  }
 }

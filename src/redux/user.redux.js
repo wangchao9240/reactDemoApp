@@ -32,7 +32,8 @@ const errorMsg = (msg) => {
   return { type: ERROR_MSG, msg }
 }
 
-const authSuccess = (data) => {
+const authSuccess = (obj) => {
+  const { pwd, ...data } = obj
   return { type: AUTH_SUCCESS, payload: data }
 }
 

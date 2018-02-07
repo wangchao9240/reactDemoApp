@@ -15,7 +15,8 @@ class Geniusinfo extends React.Component {
     super(props)
     this.state = {
       title: '',
-      desc: ''
+      desc: '',
+      avatar: ''
     }
   }
   onChange(key, val) {

@@ -17,7 +17,8 @@ class BossInfo extends React.Component {
       title: '',
       desc: '',
       company: '',
-      money: ''
+      money: '',
+      avatar: ''
     }
   }
   onChange(key, val) {

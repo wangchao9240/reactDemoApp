@@ -6,9 +6,10 @@ const utils = require('utility')
 const _filter = { pwd: 0, __v: 0 }
 
 Router.get('/list', async (req, res) => {
+  const { type } = req.query
   try {
-    const users = await User.find({}).exec()
-    return res.json(users)
+    const users = await User.find({ type }).exec()
+    return res.json({ code: 0, data: users })
   } catch (err) {
     return res.json({ code: 1, msg: `后端出错了， 错误信息${err}` })
   }

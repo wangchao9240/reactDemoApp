@@ -55,9 +55,12 @@ class Dashboard extends React.Component {
         component: User
       }
     ]
+    const navBarCom = (item) => (
+      <NavBar className="fixd-header" mode="dark">{ item.title }</NavBar>
+    )
     return (
       <div>
-        <NavBar className="fixd-header" mode="dark">{ navList.find(v => v.path === pathname).title }</NavBar>
+        { navList.find(v => v.path === pathname) ? navBarCom(navList.find(v => v.path === pathname)) : null }
         <div style={ { marginTop: 45 } }>
           <Switch>
             {navList.map(v => (

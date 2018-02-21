@@ -4,6 +4,7 @@ import { getRedirectPath } from '../util'
 const ERROR_MSG = 'ERROR_MSG'
 const AUTH_SUCCESS = 'ANTH_SUCCESS'
 const LOAD_DATA = 'LOAD_DATA'
+const LOGOUT = 'LOGOUT'
 
 const initState = {
   redirectTo: '',
@@ -22,6 +23,8 @@ export const user = (state=initState, action) => {
       return { ...state, ...action.payload }
     case ERROR_MSG:
       return { ...state, isAuth: false, msg: action.msg }
+    case LOGOUT:
+      return { ...initState, redirectTo: '/login' }
     default:
       return state
   }
@@ -82,4 +85,8 @@ export const update = (dataInfo) => {
       return dispatch(errorMsg(`连接异常-->${err}`))
     }
   }
+}
+
+export const logoutSubmit = () => {
+  return { type: LOGOUT }
 }

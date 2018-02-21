@@ -28,6 +28,33 @@ const models = {
     title: String, // 职位名
     company: String, // boss onlt
     money: String // boss only
+  },
+  chat: {
+    chatId: {
+      type: String,
+      require: true
+    },
+    from: {
+      type: String,
+      require: true
+    },
+    to: {
+      type: String,
+      require: true
+    },
+    read: {
+      type: Boolean,
+      default: false
+    },
+    content: {
+      type: String,
+      require: true,
+      default: ''
+    },
+    createTime: {
+      type: Number,
+      default: new Date().getTime()
+    }
   }
 }
 

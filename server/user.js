@@ -2,17 +2,28 @@ const express = require('express')
 const Router =  express.Router()
 const model = require('./model')
 const User = model.getModel('user')
+const Chat = model.getModel('chat')
 const utils = require('utility')
 const _filter = { pwd: 0, __v: 0 }
 
 Router.get('/list', async (req, res) => {
   const { type } = req.query
-  console.log('type-->', type)
   try {
     const users = await User.find({ type }).exec()
     return res.json({ code: 0, data: users })
   } catch (err) {
     return res.json({ code: 1, msg: `后端出错了， 错误信息${err}` })
+  }
+})
+
+Router.get('/getmsglist', async (req, res) => {
+  const { userid } = req.cookies
+  try {
+    // {'$or': [{ from: user, to: user }]}
+    const msgs = await Chat.find({}).exec()
+    return res.json({ code: 0, msgs: msgs })
+  } catch (err) {
+    return res.json({ code: 1, msg: `后端出错了，错误信息${err}` })
   }
 })
 

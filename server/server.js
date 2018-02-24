@@ -6,11 +6,23 @@ const cookieParser = require('cookie-parser')
 // work width express
 const server = require('http').Server(app)
 const io = require('socket.io')(server)
+
+const model = require('./model')
+const Chat = model.getModel('chat')
 // const utils = require('utility')
 
 io.on('connection', (socket) => {
-  socket.on('sendmsg', (data) => {
-    io.emit('recvmsg', data)
+  socket.on('sendmsg', async (data) => {
+    try {
+      const { from, to, msg } = data
+      const chatId = [from, to].sort().join('_')
+      const chatModel = new Chat({ chatId, from, to, content: msg })
+      const newChat = await chatModel.save()
+      console.log('newChat-->', newChat)
+      io.emit('recvmsg', Object.assign({}, newChat))
+    } catch (err) {
+      console.log(err)
+    }
   })
 })
 

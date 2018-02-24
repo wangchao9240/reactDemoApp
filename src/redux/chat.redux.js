@@ -20,7 +20,8 @@ export const chat = (state = initState, action) => {
   switch (action.type) {
     case MSG_LIST:
       return { ...state, chatMsg: action.payload, unread: action.payload.filter(v => !v.read).length }
-    // case MSG_RECV:
+    case MSG_RECV:
+      return { ...state, chatMsg: [...state.chatMsg, action.payload] }
     // case MSG_READ:
     default:
       return state
@@ -31,8 +32,20 @@ export const chat = (state = initState, action) => {
 const msgList = (msgs) => {
   return { type: MSG_LIST, payload: msgs }
 }
+const msgRecv = (msg) => {
+  return { type: MSG_RECV, payload: msg }
+}
 
 // action
+export const recvMsg = () => {
+  return dispatch => {
+    socket.on('recvmsg', (data) => {
+      console.log('recvmsg-->', data)
+      dispatch(msgRecv(data))
+    })
+  }
+}
+
 export const getMsgList = () => {
   return async dispatch => {
     try {
@@ -42,4 +55,8 @@ export const getMsgList = () => {
       console.log(err)
     }
   }
+}
+
+export const sendMsg = ({ from, to, msg }) => {
+  return dispatch => socket.emit('sendmsg', { from, to, msg })
 }

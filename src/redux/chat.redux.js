@@ -21,7 +21,7 @@ export const chat = (state = initState, action) => {
     case MSG_LIST:
       return { ...state, chatMsg: action.payload, unread: action.payload.filter(v => !v.read).length }
     case MSG_RECV:
-      return { ...state, chatMsg: [...state.chatMsg, action.payload] }
+      return { ...state, chatMsg: [...state.chatMsg, action.payload], unread: state.unread + 1 }
     // case MSG_READ:
     default:
       return state
@@ -40,8 +40,7 @@ const msgRecv = (msg) => {
 export const recvMsg = () => {
   return dispatch => {
     socket.on('recvmsg', (data) => {
-      console.log('recvmsg-->', data)
-      dispatch(msgRecv(data))
+      dispatch(msgRecv(data._doc))
     })
   }
 }

@@ -1,10 +1,7 @@
 import React from 'react'
-// import io from 'socket.io-client'
-import { List, InputItem } from 'antd-mobile'
+import { List, InputItem, NavBar } from 'antd-mobile'
 import { connect } from 'react-redux'
 import { getMsgList, sendMsg, recvMsg } from '../../redux/chat.redux'
-
-// const socket = io('ws://localhost:9093')
 
 @connect(
   state => state,
@@ -24,8 +21,6 @@ class Chat extends React.Component {
     this.props.recvMsg()
   }
   handlerSubmit() {
-    // socket.emit('sendmsg', { text: this.state.text })
-    // this.setState({ text: '' })
     const from = this.props.user._id
     const to = this.props.match.params.user
     const msg = this.state.text
@@ -33,11 +28,26 @@ class Chat extends React.Component {
     this.setState({ text: '' })
   }
   render() {
+    const user = this.props.match.params.user
+    const Item = List.Item
+    const left = (v) => (
+      <List key={ v._id }>
+        <Item
+        >{ v.content }</Item>
+      </List>
+    )
+    const right = (v) => (
+      <List key={ v._id }>
+        <Item
+          className="chat-me"
+          extra={ 'avatar' }
+        >{ v.content }</Item>
+      </List>
+    )
     return (
-      <div>
-        { this.state.msg.map(v => (
-          <p key={ v }>{ v }</p>
-        )) }
+      <div id="chat-page">
+        <NavBar mode="dark">{ this.props.match.params.user }</NavBar>
+        { this.props.chat.chatMsg.map(v => v.from === user ? left(v) : right(v)) }
         <div className="stick-footer">
           <List>
             <InputItem

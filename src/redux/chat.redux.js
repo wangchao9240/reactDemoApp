@@ -20,7 +20,7 @@ const initState = {
 export const chat = (state = initState, action) => {
   switch (action.type) {
     case MSG_LIST:
-      return { ...state, users: action.payload.users, chatMsg: action.payload.msgs, unread: action.payload.msgs.filter(v => !v.read).length }
+      return { ...state, users: action.payload.users, chatMsg: action.payload.msgs, unread: action.payload.msgs.filter(v => !v.read && v.to === action.payload.userid).length }
     case MSG_RECV:
       return { ...state, chatMsg: [...state.chatMsg, action.payload], unread: state.unread + 1 }
     // case MSG_READ:
@@ -30,8 +30,8 @@ export const chat = (state = initState, action) => {
 }
 
 // action creater
-const msgList = (msgs, users) => {
-  return { type: MSG_LIST, payload: { msgs, users } }
+const msgList = (msgs, users, userid) => {
+  return { type: MSG_LIST, payload: { msgs, users, userid } }
 }
 const msgRecv = (msg) => {
   return { type: MSG_RECV, payload: msg }
@@ -47,10 +47,13 @@ export const recvMsg = () => {
 }
 
 export const getMsgList = () => {
-  return async dispatch => {
+  return async (dispatch, getState) => {
     try {
       const { data } = await axios.get('/user/getmsglist')
-      if (data.code === 0) dispatch(msgList(data.msgs, data.users))
+      if (data.code === 0) {
+        const userid = getState().user._id
+        dispatch(msgList(data.msgs, data.users, userid))
+      }
     } catch (err) {
       console.log(err)
     }

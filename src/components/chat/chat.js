@@ -2,6 +2,7 @@ import React from 'react'
 import { List, InputItem, NavBar, Icon } from 'antd-mobile'
 import { connect } from 'react-redux'
 import { getMsgList, sendMsg, recvMsg } from '../../redux/chat.redux'
+import { getChatId } from '../../util'
 
 @connect(
   state => state,
@@ -32,6 +33,8 @@ class Chat extends React.Component {
     const userid = this.props.match.params.user
     const Item = List.Item
     const { users } = this.props.chat
+    const chatId = getChatId(userid, this.props.user._id)
+    const chatMsgs = this.props.chat.chatMsg.filter(v => v.chatId === chatId)
     const left = (v) => (
       <List key={ v._id }>
         <Item
@@ -55,7 +58,7 @@ class Chat extends React.Component {
           icon={ <Icon type="left"></Icon> }
           onLeftClick={ () => this.props.history.goBack() }
         >{ users[userid].name }</NavBar>
-        { this.props.chat.chatMsg.map(v => v.from === userid ? left(v) : right(v)) }
+        { chatMsgs.map(v => v.from === userid ? left(v) : right(v)) }
         <div className="stick-footer">
           <List>
             <InputItem

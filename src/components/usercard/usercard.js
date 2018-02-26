@@ -11,7 +11,7 @@ class UserCard extends React.Component {
   }
   handlerClick(v) {
     console.log('props', this.props)
-    this.props.history.push(`/chat/${v.user}`)
+    this.props.history.push(`/chat/${v._id}`)
   }
   render() {
     const cardCom = (v) => (

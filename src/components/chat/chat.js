@@ -1,5 +1,5 @@
 import React from 'react'
-import { List, InputItem, NavBar } from 'antd-mobile'
+import { List, InputItem, NavBar, Icon } from 'antd-mobile'
 import { connect } from 'react-redux'
 import { getMsgList, sendMsg, recvMsg } from '../../redux/chat.redux'
 
@@ -17,6 +17,7 @@ class Chat extends React.Component {
     }
   }
   componentDidMount() {
+    if (this.props.chat.chatMsg.length) return
     this.props.getMsgList()
     this.props.recvMsg()
   }
@@ -28,11 +29,13 @@ class Chat extends React.Component {
     this.setState({ text: '' })
   }
   render() {
-    const user = this.props.match.params.user
+    const userid = this.props.match.params.user
     const Item = List.Item
+    const { users } = this.props.chat
     const left = (v) => (
       <List key={ v._id }>
         <Item
+          thumb={ require(`../img/${users[v.from].avatar}.png`) }
         >{ v.content }</Item>
       </List>
     )
@@ -40,14 +43,19 @@ class Chat extends React.Component {
       <List key={ v._id }>
         <Item
           className="chat-me"
-          extra={ 'avatar' }
+          extra={ <img src={ require(`../img/${users[v.from].avatar}.png`) } alt=""/> }
         >{ v.content }</Item>
       </List>
     )
+    if (!users[userid]) return null
     return (
       <div id="chat-page">
-        <NavBar mode="dark">{ this.props.match.params.user }</NavBar>
-        { this.props.chat.chatMsg.map(v => v.from === user ? left(v) : right(v)) }
+        <NavBar
+          mode="dark"
+          icon={ <Icon type="left"></Icon> }
+          onLeftClick={ () => this.props.history.goBack() }
+        >{ users[userid].name }</NavBar>
+        { this.props.chat.chatMsg.map(v => v.from === userid ? left(v) : right(v)) }
         <div className="stick-footer">
           <List>
             <InputItem

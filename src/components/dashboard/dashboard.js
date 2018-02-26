@@ -6,16 +6,23 @@ import { Switch, Route } from 'react-router-dom'
 import Boss from '../boss/boss'
 import Genius from '../genius/genius'
 import User from '../user/user'
+import { getMsgList, recvMsg } from '../../redux/chat.redux'
+
 
 const Msg = () => {
   return <h2>消息列表</h2>
 }
 
 @connect(
-  state => state
+  state => state,
+  { getMsgList, recvMsg }
 )
 
 class Dashboard extends React.Component {
+  componentDidMount() {
+    this.props.getMsgList()
+    this.props.recvMsg()
+  }
   render() {
     const { pathname } = this.props.location
     const user = this.props.user

@@ -20,8 +20,13 @@ Router.get('/getmsglist', async (req, res) => {
   const { userid } = req.cookies
   try {
     // {'$or': [{ from: user, to: user }]}
-    const msgs = await Chat.find({}).exec()
-    return res.json({ code: 0, msgs: msgs })
+    const findUsers = await User.find({}).exec()
+    let users = {}
+    findUsers.forEach(v => {
+      users[v._id] = { name: v.user, avatar: v.avatar }
+    })
+    const msgs = await Chat.find({ '$or': [{ from: userid }, { to: userid }] }).exec()
+    return res.json({ code: 0, msgs, users })
   } catch (err) {
     return res.json({ code: 1, msg: `后端出错了，错误信息${err}` })
   }

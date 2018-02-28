@@ -6,12 +6,8 @@ import { Switch, Route } from 'react-router-dom'
 import Boss from '../boss/boss'
 import Genius from '../genius/genius'
 import User from '../user/user'
+import Msg from '../msg/msg'
 import { getMsgList, recvMsg } from '../../redux/chat.redux'
-
-
-const Msg = () => {
-  return <h2>消息列表</h2>
-}
 
 @connect(
   state => state,

@@ -32,6 +32,17 @@ Router.get('/getmsglist', async (req, res) => {
   }
 })
 
+Router.post('/readmsg', async (req, res) => {
+  const userid = req.cookies.userid
+  const { from } = req.body
+  try {
+    const chat = await Chat.update({ from, to: userid }, { '$set': { read: true } }, { 'multi': true }).exec()
+    return res.json({ code: 0, num: chat.nModified })
+  } catch (err) {
+    return res.json({ code: 1, msg: `后端出错了，错误信息${err}` })
+  }
+})
+
 Router.post('/update', async (req, res) => {
   const { userid } = req.cookies
   if (!userid) return res.json({ code: 1 })

@@ -18,7 +18,6 @@ io.on('connection', (socket) => {
       const chatId = [from, to].sort().join('_')
       const chatModel = new Chat({ chatId, from, to, content: msg })
       const newChat = await chatModel.save()
-      console.log('newChat-->', newChat)
       io.emit('recvmsg', Object.assign({}, newChat))
     } catch (err) {
       console.log(err)

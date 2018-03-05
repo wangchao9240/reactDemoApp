@@ -3,6 +3,7 @@ import { List, InputItem, NavBar, Icon, Grid } from 'antd-mobile'
 import { connect } from 'react-redux'
 import { getMsgList, sendMsg, recvMsg, readMsg } from '../../redux/chat.redux'
 import { getChatId } from '../../util'
+import QueueAnim from 'rc-queue-anim'
 
 @connect(
   state => state,
@@ -74,7 +75,9 @@ class Chat extends React.Component {
           icon={ <Icon type="left"></Icon> }
           onLeftClick={ () => this.props.history.goBack() }
         >{ users[userid].name }</NavBar>
-        { chatMsgs.map(v => v.from === userid ? left(v) : right(v)) }
+        <QueueAnim type="left" delay={100} style={{ marginBottom: 44, width: '100%', overflow: 'hidden' }}>
+          { chatMsgs.map(v => v.from === userid ? left(v) : right(v)) }
+        </QueueAnim>
         <div className="stick-footer">
           <List>
             <InputItem
